@@ -1,0 +1,89 @@
+from torch.autograd import Variable
+from torch.nn import functional as F
+from torchvision.transforms import transforms
+from torchvision.utils import save_image
+from torch import Tensor
+
+
+from torch import nn
+from torch import autograd
+from torch import optim
+from torchvision import transforms, datasets
+from torch.autograd import grad
+from timeit import default_timer as timer
+import torch.nn.init as init
+from torchvision.utils import save_image
+from torchvision.utils import make_grid
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+
+import torch
+import torch.utils.data
+from torch import nn, optim
+from torch.autograd import Variable
+from torch.nn import functional as F
+from torchvision import datasets, transforms
+from torchvision.utils import save_image
+from torch import Tensor
+import astra
+import numpy as np
+
+
+
+def imshow_version(x, mode='all',padding=0):
+    if mode=='all':
+        y=x[:16].squeeze(1)    
+        im=make_grid(y.view(-1,1,x.size()[-2],x.size()[-1]), 4,padding=padding)
+      
+  
+        
+    return np.transpose(im.numpy(),(1,2,0))[:,:,0]
+
+def save_fig(x, filenameIteration, filenameCurrent, figshow=False, Title=''):
+    
+    
+    fig =plt.figure(1,figsize= (20,20))
+   
+    im=np.transpose(make_grid(x,nrow=int(np.sqrt(x.size()[0])),padding=0).numpy(),(1,2,0))[:,:,0]
+    plt.imshow(im,cmap='gray_r')
+    
+   
+    plt.colorbar(fraction=0.046, pad=0.04)
+    plt.title(Title)
+    
+        
+    filenameIterationpng=(filenameIteration+'.png')
+    fig.savefig(filenameIterationpng, dpi=80, bbox='tight' )
+    
+    filenameCurrentpng=(filenameCurrent+'.png')
+    fig.savefig(filenameCurrentpng, dpi=80, bbox='tight' )
+
+    plt.close(fig)
+    
+    
+
+
+def save_fig_double(x,y,filenameIteration, filenameCurrent, figshow=False, Title1= 'Real Data',Title2= 'Fake Data' ):
+
+    
+    fig =plt.figure(2,figsize= (40,20))
+    
+    plt.subplot(1,2,1)
+    plt.imshow(imshow_version(x,padding=0),cmap='gray_r')
+    plt.title(Title1)
+    plt.colorbar(fraction=0.046, pad=0.04)
+    
+    plt.subplot(1,2,2)    
+    plt.imshow(imshow_version(y,padding=0),cmap='gray_r')
+    plt.title(Title2)
+    plt.colorbar(fraction=0.046, pad=0.04)
+
+        
+    filenameIterationpng=(filenameIteration+'.png')
+    fig.savefig(filenameIterationpng, dpi=80, bbox='tight' )
+    
+    filenameCurrentpng=(filenameCurrent+'.png')
+    fig.savefig(filenameCurrentpng, dpi=80, bbox='tight' )
+    
+    plt.close(fig)
