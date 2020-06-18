@@ -6,3 +6,4 @@ conda create --name cryoem --file ./cryoemfinal/install.txt
 conda activate cryoem
 pip install "pillow<7"
 
+
