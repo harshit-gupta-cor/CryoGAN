@@ -48,16 +48,16 @@ class ProGAN:
             self.dis.apply(lambda m: weights_init(m, self.args))
 
             if self.args.UseOtherDis:
-                
-                listdir = os.listdir('./Results/'+self.args.dataset)
-                listdir= ['./Results/'+self.args.dataset+'/'+dirname for dirname in listdir if self.args.name[:-5] in dirname and self.args.data_type not in dirname]
-                if len(listdir)>0:
-                    listdir.sort(key=lambda x: os.path.getctime(x))
-                    dispath=listdir[-1]+'/Discriminator.pth'
-                    print("Loading discriminator from "+dispath)
-                    self.dis.load_state_dict(torch.load(dispath))
-                else:
-                    print("Couldnt find a previous saved dis")
+                try:
+                    listdir = os.listdir('./Results/'+self.args.dataset)
+                    listdir= ['./Results/'+self.args.dataset+'/'+dirname for dirname in listdir if self.args.name[:-5] in dirname and self.args.data_type not in dirname]
+                    if len(listdir)>0:
+                        listdir.sort(key=lambda x: os.path.getctime(x))
+                        dispath=listdir[-1]+'/Discriminator.pth'
+                        print("Loading discriminator from "+dispath)
+                        self.dis.load_state_dict(torch.load(dispath))
+                except:
+                        print("Couldnt find a previous saved dis")
         
            
             print('gen: ', self.gen)
@@ -145,7 +145,7 @@ class ProGAN:
                     wass_loss=wass_loss + wass_lossIter/float(self.args.dis_iterations)
 
 
-                gen_loss, fake_samples, projNoisy, projCTF, projClean, Noise = self.optimize_generator(images, multipleNoise=True)
+                gen_loss, fake_samples, projNoisy, projCTF, projClean, Noise = self.optimize_generator(ChangeAngles=True)
                
                 with torch.no_grad():
                     

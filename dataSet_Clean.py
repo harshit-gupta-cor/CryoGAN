@@ -31,7 +31,7 @@ import scipy.io as sio
 from Functions.FunctionsDataset import *
 from Functions.Functions import *
 from Functions.FunctionsCTF import *
-from Functions.FunctionsHandle import *
+
 from Functions.FunctionsSymmetry import *
 from Functions.FunctionsSaveImage import *
 from Functions.FunctionsFourier import *
@@ -117,7 +117,23 @@ class Cryo(Dataset):
                     self.EstimatedDefocuses[:,0]=self.EstimatedDefocuses[:,0]/1e4
                     self.EstimatedDefocuses[:,1]=self.EstimatedDefocuses[:,1]/1e4
                     self.EstimatedDefocuses[:,2]=self.EstimatedDefocuses[:,2]*np.pi/180.0
-
+        
+        
+        elif self.args.dataset in [ 'Betagal-Synthetic']:
+            if self.args.AlgoType=='generate' :
+                total_images= self.args.DatasetSize
+            else:
+                
+                dir='./Datasets/'+self.args.dataset+'/'+self.args.dataset_name+'/'                
+                list=os.listdir(dir  )
+                listmrc=[x for x in list if '.mrc' in x] 
+                self.ImageStack=[dir+x for x in listmrc if 'projNoisy' in x] 
+                self.train_size= len(self.ImageStack)
+                total_images= self.train_size
+                
+            self.train_size=total_images   
+        
+        
         if self.data_type == 'even' or self.data_type == 'odd':
             self.train_size = self.train_size//2
         else:
