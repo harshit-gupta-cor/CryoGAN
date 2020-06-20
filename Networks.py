@@ -59,12 +59,12 @@ class cryoGenerator(th.nn.Module):
         self.VolumeMaskRadius=None      
         self.VolumeMaskRadiusPrev=None
 
-    def forward(self, real_samples, skipDownsampling=False, ChangeAngles=True,  GaussianSigma=None, ratio=0, multipleNoise=False):
+    def forward(self,  ChangeAngles=True):
         self.iteration=self.iteration+1
         """
         forward pass of the Generator
         """
-        projNoisy, projCTF, projClean, self.Volume, Noise=self.G(self.X,real_samples, ChangeAngles=ChangeAngles, ratio=ratio)
+        projNoisy, projCTF, projClean, self.Volume, Noise=self.G(self.X, ChangeAngles=ChangeAngles)
         fake_samples=    projNoisy
         return fake_samples, projNoisy, projCTF, projClean, Noise
 
@@ -141,25 +141,16 @@ class cryoGenerator(th.nn.Module):
         with torch.no_grad():
             if self.args.VolumeMask:
 
-                
-
                 self.VolumeMaskRadiusNew=radius
-
                 if self.VolumeMaskRadiusNew != self.VolumeMaskRadiusPrev:
-
                     self.mask, self.maskd,self.xx,self.yy,self.zz,self.centrex, self.centrey, self.centrez, self.radius=InitMask(self.args,self.G.Xd, self.G.X, self.VolumeMaskRadiusNew)          
                 self.VolumeMaskRadiusPrev=self.VolumeMaskRadiusNew
 
-
                 if self.args.SymmetryType != 'none':
-
                     self.X.data = self.X.data*self.maskd.unsqueeze(0)      
                 else:
-
                     self.X.data = self.X.data*self.mask.unsqueeze(0)   
-    
-   
-        
+
      
     def ExpandVolume(self, X, n, device):
         Y=torch.zeros(n,n,n).to(device)
